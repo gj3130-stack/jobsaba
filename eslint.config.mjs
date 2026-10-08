@@ -11,6 +11,8 @@ const eslintConfig = [
   {
     rules: {
       "@next/next/no-img-element": "off",
+      // App Router layout loads IBM Plex Sans KR and Nanum Myeongjo with system fallbacks.
+      "@next/next/no-page-custom-font": "off",
     },
   },
 ];

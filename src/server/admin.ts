@@ -6,7 +6,7 @@ import { getCourierService } from "@/lib/adapters";
 import { field, intField } from "@/lib/form";
 import { requireAdmin } from "@/lib/session";
 
-function back(path: string, error: string) {
+function back(path: string, error: string): never {
   redirect(`${path}?error=${encodeURIComponent(error)}`);
 }
 

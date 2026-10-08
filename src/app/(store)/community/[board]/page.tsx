@@ -25,7 +25,7 @@ export default async function CommunityPage({
   const meta = BOARDS[board as keyof typeof BOARDS];
   const sp = await searchParams;
   const { supabase, user } = await getSession();
-  const posts = supabase ? await listPosts(supabase, board) : { posts: [] };
+  const posts = supabase ? await listPosts(supabase, board) : { posts: [], error: null };
   return (
     <PostList
       title={meta.title}
