@@ -1,17 +1,18 @@
-import { ProductGrid } from "@/components/ui";
-import { listProducts } from "@/lib/queries";
+import { PageTitle, ProductGrid } from "@/components/ui";
 import { getSession } from "@/lib/session";
+import { storeProducts } from "@/lib/store-data";
 
 export const metadata = { title: "신상품" };
 
 export default async function NewPage() {
   const { supabase } = await getSession();
-  const { products } = supabase ? await listProducts(supabase, { newest: true, sort: "new" }) : { products: [] };
+  const { products } = await storeProducts(supabase, { newest: true, sort: "new" });
+  const fresh = products.filter((item) => item.isNew);
   return (
     <div>
-      <h1 className="serif text-4xl">신상품</h1>
-      <div className="mt-6">
-        <ProductGrid products={products} />
+      <PageTitle eyebrow="New" title="새로 담갔어요" body="이번 계절에 새로 선보이는 잡사바의 맛. 처음 나온 상품부터 차례로 보여 드려요." />
+      <div className="mt-8">
+        <ProductGrid products={fresh.length > 0 ? fresh : products.slice(0, 12)} />
       </div>
     </div>
   );

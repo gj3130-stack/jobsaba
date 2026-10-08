@@ -1,3 +1,4 @@
+import { Empty } from "@/components/ui";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { formatKRW } from "@/lib/format";
@@ -10,7 +11,7 @@ export const metadata = { title: "주문 완료" };
 export default async function OrderCompletePage({ params }: { params: Promise<{ orderNo: string }> }) {
   const { orderNo } = await params;
   const { supabase } = await getSession();
-  if (!supabase) return <p>Supabase 연결이 필요합니다.</p>;
+  if (!supabase) return <Empty title="준비 중인 페이지예요" body="회원·게시판 기능은 오픈 준비 중이에요. 조금만 기다려 주세요." href="/" action="홈으로" />;
   const { order } = await getOrder(supabase, orderNo);
   if (!order) notFound();
   return (

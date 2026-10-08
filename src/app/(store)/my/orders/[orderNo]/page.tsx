@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { Flash } from "@/components/ui";
+import { Flash, Empty } from "@/components/ui";
 import { formatDateTime, formatKRW, formatPoint } from "@/lib/format";
 import { ORDER_STATUS_LABEL, SHIPMENT_STATUS_LABEL, labelOf } from "@/lib/labels";
 import { getOrder } from "@/lib/queries";
@@ -16,7 +16,7 @@ export default async function OrderDetailPage({
   const { orderNo } = await params;
   const sp = await searchParams;
   const { supabase } = await getSession();
-  if (!supabase) return <p>Supabase 연결이 필요합니다.</p>;
+  if (!supabase) return <Empty title="준비 중인 페이지예요" body="회원·게시판 기능은 오픈 준비 중이에요. 조금만 기다려 주세요." href="/" action="홈으로" />;
   const { order } = await getOrder(supabase, orderNo);
   if (!order) notFound();
   const tracking = order.shipment?.trackingNo ? await trackShipment(order.shipment.carrier || "택배", order.shipment.trackingNo) : null;

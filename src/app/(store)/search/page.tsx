@@ -1,9 +1,13 @@
 import Link from "next/link";
-import { ProductGrid } from "@/components/ui";
-import { listCategories, listProducts } from "@/lib/queries";
+import { SearchIcon } from "@/components/icons";
+import { Toolbar } from "@/components/listing";
+import { PageTitle, ProductGrid } from "@/components/ui";
 import { getSession } from "@/lib/session";
+import { storeCategories, storeProducts } from "@/lib/store-data";
 
 export const metadata = { title: "검색" };
+
+const POPULAR = ["참기름", "들기름", "액젓", "보리고추장", "명란", "장아찌", "멸치볶음", "선물세트"];
 
 export default async function SearchPage({
   searchParams,
@@ -12,48 +16,45 @@ export default async function SearchPage({
 }) {
   const sp = await searchParams;
   const { supabase } = await getSession();
-  const categories = supabase ? await listCategories(supabase) : { categories: [] };
-  const result = supabase
-    ? await listProducts(supabase, {
-        query: sp.q,
-        categorySlug: sp.category,
-        sort: sp.sort,
-        inStock: sp.stock === "1",
-      })
-    : { products: [], error: null };
+  const categories = await storeCategories(supabase);
+  const q = sp.q?.trim() ?? "";
+  const result = await storeProducts(supabase, { query: q || undefined, categorySlug: sp.category || undefined, sort: sp.sort, inStock: sp.stock === "1" });
   return (
     <div>
-      <h1 className="serif text-4xl">검색</h1>
-      <form className="mt-4 grid gap-3 md:grid-cols-4">
-        <input className="field md:col-span-2" name="q" defaultValue={sp.q} placeholder="상품명" aria-label="검색어" />
-        <select className="field" name="category" defaultValue={sp.category || ""} aria-label="카테고리">
-          <option value="">모든 카테고리</option>
-          {categories.categories.map((category) => (
-            <option key={category.id} value={category.slug}>
-              {category.name}
-            </option>
+      <PageTitle eyebrow="Search" title={q ? `‘${q}’ 검색 결과` : "무엇을 찾으세요?"}>
+        <form className="mt-5 flex max-w-2xl flex-col gap-2 md:flex-row">
+          <div className="relative flex-1">
+            <input className="field !rounded-full !py-3 !pl-5 !pr-12" name="q" defaultValue={q} placeholder="상품명, 원재료로 찾아보세요" aria-label="검색어" />
+            <SearchIcon className="absolute right-4 top-1/2 -translate-y-1/2 text-muted" size={20} />
+          </div>
+          <select className="field !w-auto !rounded-full" name="category" defaultValue={sp.category || ""} aria-label="카테고리">
+            <option value="">모든 카테고리</option>
+            {categories.map((category) => (
+              <option key={category.id} value={category.slug}>
+                {category.name}
+              </option>
+            ))}
+          </select>
+          <button className="btn btn-dark !rounded-full" type="submit">
+            검색
+          </button>
+        </form>
+        <div className="mt-4 flex flex-wrap gap-2 text-sm">
+          <span className="text-muted">인기 검색어</span>
+          {POPULAR.map((word) => (
+            <Link key={word} href={`/search?q=${encodeURIComponent(word)}`} className={`font-semibold hover:text-gochujang ${word === q ? "text-gochujang" : ""}`}>
+              #{word}
+            </Link>
           ))}
-        </select>
-        <select className="field" name="sort" defaultValue={sp.sort || ""} aria-label="정렬">
-          <option value="">판매량</option>
-          <option value="new">신상품</option>
-          <option value="price_asc">낮은 가격</option>
-          <option value="price_desc">높은 가격</option>
-        </select>
-        <label className="flex items-center gap-2 text-sm">
-          <input type="checkbox" name="stock" value="1" defaultChecked={sp.stock === "1"} /> 재고 있는 상품
-        </label>
-        <button className="btn btn-primary" type="submit">
-          적용
-        </button>
-      </form>
+        </div>
+      </PageTitle>
+      <div className="mt-6">
+        <Toolbar base="/search" count={result.products.length} sort={sp.sort ?? ""} keep={{ q: q || undefined, category: sp.category || undefined }} />
+      </div>
       {result.error ? <p className="mt-3 text-sm text-gochujang">{result.error}</p> : null}
       <div className="mt-6">
         <ProductGrid products={result.products} />
       </div>
-      <p className="mt-4 text-sm">
-        <Link href="/best">베스트</Link> · <Link href="/new">신상품</Link>
-      </p>
     </div>
   );
 }

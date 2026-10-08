@@ -15,6 +15,8 @@ export type Category = {
   description: string;
 };
 
+export type StorageType = "room" | "refrigerated" | "frozen";
+
 export type ProductCard = {
   id: string;
   slug: string;
@@ -35,6 +37,12 @@ export type ProductCard = {
   pointRateBps: number;
   salesCount: number;
   createdAt: string;
+  /** 보관유형 (상온/냉장/냉동). DB 경로에서는 storage_method 문구로 추정한다. */
+  storageType?: StorageType;
+  /** 세부 분류 (예: 참기름·들기름, 액젓) */
+  tag?: string;
+  rating?: number;
+  reviewCount?: number;
 };
 
 export type VariantChoice = {
@@ -60,6 +68,17 @@ export type ProductDetail = ProductCard & {
   shippingNote: string;
   variants: VariantChoice[];
   images: { src: string; alt: string }[];
+  extra?: ProductExtra;
+};
+
+/** 상품 상세의 브랜드 상세(스토리·포인트·곁들임·고시) 정보. 로컬 카탈로그에서 slug로 붙인다. */
+export type ProductExtra = {
+  foodType: string;
+  story: string;
+  points: { title: string; body: string }[];
+  pairings: string[];
+  howTo: string;
+  notice: [label: string, value: string][];
 };
 
 export type ReviewItem = {

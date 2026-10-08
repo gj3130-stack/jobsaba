@@ -1,6 +1,7 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { resolveImage } from "@/lib/images";
 import { DEFAULT_POLICY, type CouponPolicy, type ShopPolicy } from "@/lib/pricing";
+import { inferStorageType } from "@/lib/shipping";
 import type {
   Address,
   CartLine,
@@ -15,7 +16,7 @@ import type {
 } from "@/lib/models";
 
 const PRODUCT_LIST = `
-  id, slug, name, summary, status, is_best, is_new, is_one_plus_one, point_rate_bps,
+  id, slug, name, summary, status, storage_method, is_best, is_new, is_one_plus_one, point_rate_bps,
   sales_count, created_at, category_id,
   categories ( id, slug, name ),
   product_variants ( id, list_price, sale_price, stock, is_active ),
@@ -85,6 +86,7 @@ function mapCard(row: Record<string, unknown>): ProductCard | null {
     pointRateBps: num(row.point_rate_bps, 100),
     salesCount: num(row.sales_count),
     createdAt: str(row.created_at),
+    storageType: inferStorageType(str(row.storage_method)),
   };
 }
 

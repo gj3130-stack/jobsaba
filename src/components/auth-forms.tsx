@@ -24,7 +24,7 @@ export function LoginForm({ nextPath }: { nextPath: string }) {
     const form = new FormData(event.currentTarget);
     const supabase = createBrowserSupabase();
     if (!supabase) {
-      setMessage("Supabase URL과 anon 키를 .env.local에 넣어 주세요.");
+      setMessage("회원 로그인은 오픈 준비 중이에요. 조금만 기다려 주세요.");
       return;
     }
     setPending(true);
@@ -79,7 +79,7 @@ export function SignupForm() {
     }
     const supabase = createBrowserSupabase();
     if (!supabase) {
-      setMessage("Supabase URL과 anon 키를 .env.local에 넣어 주세요.");
+      setMessage("회원 로그인은 오픈 준비 중이에요. 조금만 기다려 주세요.");
       return;
     }
     setPending(true);
@@ -133,7 +133,7 @@ export function ForgotPasswordForm() {
     event.preventDefault();
     const supabase = createBrowserSupabase();
     if (!supabase) {
-      setMessage("Supabase 환경 변수를 설정해 주세요.");
+      setMessage("회원 기능은 오픈 준비 중이에요. 조금만 기다려 주세요.");
       return;
     }
     const email = String(new FormData(event.currentTarget).get("email") || "");
