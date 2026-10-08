@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { BrandMark } from "@/components/brand-mark";
 import { requireAdmin } from "@/lib/session";
 
 const LINKS = [
@@ -38,8 +39,9 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     <div className="min-h-screen">
       <header className="border-b border-line bg-paper">
         <div className="mx-auto flex max-w-[1440px] items-center justify-between gap-4 px-4 py-4 md:px-8">
-          <Link href="/admin" className="serif text-2xl">
-            잡사바 관리
+          <Link href="/admin" className="flex items-center gap-2">
+            <BrandMark className="h-10 w-10" />
+            <span className="serif text-2xl">잡사바 관리</span>
           </Link>
           <Link href="/" className="text-sm text-muted">
             상점 보기

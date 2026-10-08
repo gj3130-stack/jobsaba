@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { readGuestCart } from "@/lib/guest-cart";
 import { CATEGORY_NAV, SHOP_LINKS } from "@/lib/nav";
+import { BrandMark } from "@/components/brand-mark";
 import { logout } from "@/server/shop";
 
 const MOBILE = [
@@ -163,7 +164,7 @@ export function Header({
     <header className="sticky top-0 z-40 border-b border-line bg-cream/95 backdrop-blur">
       <div className="mx-auto flex max-w-[1440px] items-center gap-4 px-4 py-3 md:px-8">
         <Link href="/" className="flex items-center gap-2">
-          <span className="serif inline-flex h-10 w-10 items-center justify-center rounded-full bg-gochujang text-sm text-white">사바</span>
+          <BrandMark className="h-11 w-11" />
           <span>
             <span className="serif block text-xl leading-none">잡사바</span>
             <span className="text-[10px] tracking-[0.2em] text-muted">FOOD</span>
@@ -224,7 +225,10 @@ export function Footer() {
     <footer className="border-t border-line bg-paper">
       <div className="mx-auto grid max-w-[1440px] gap-6 px-4 py-10 text-sm text-muted md:grid-cols-4 md:px-8">
         <div>
-          <p className="serif text-2xl text-ink">잡사바</p>
+          <div className="flex items-center gap-2">
+            <BrandMark className="h-10 w-10" />
+            <p className="serif text-2xl text-ink">잡사바</p>
+          </div>
           <p className="mt-2 leading-6">밥상에 바로 올리는 소스, 장류, 장아찌, 반찬, 젓갈.</p>
         </div>
         <div>
