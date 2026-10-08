@@ -1,6 +1,9 @@
 import Link from "next/link";
+import { preload } from "react-dom";
+import { HeroCarousel } from "@/components/hero-carousel";
 import { ProductGrid, Section } from "@/components/ui";
 import { formatDate } from "@/lib/format";
+import { HERO_SIZES, HERO_SLIDES } from "@/lib/hero-carousel";
 import { homeContent } from "@/lib/queries";
 import { getSession } from "@/lib/session";
 
@@ -8,28 +11,22 @@ export default async function HomePage() {
   const { supabase } = await getSession();
   const home = supabase ? await homeContent(supabase) : null;
   const banners = home?.banners ?? [];
+  const lead = HERO_SLIDES[0];
+  preload(lead.avif, {
+    as: "image",
+    type: "image/avif",
+    fetchPriority: "high",
+    imageSrcSet: `${lead.avifSmall} 960w, ${lead.avif} 1672w`,
+    imageSizes: HERO_SIZES,
+  });
   return (
     <div>
-      <section className="grid gap-4 lg:grid-cols-[1.4fr_0.8fr]">
-        <div className="relative overflow-hidden rounded-[2rem] bg-ink px-6 py-10 text-paper md:px-10 md:py-14">
-          <p className="text-sm text-white/70">Modern Korean Pantry</p>
-          <h1 className="serif mt-3 max-w-xl text-4xl leading-tight md:text-6xl">찬장에서 꺼내는 오늘의 맛</h1>
-          <p className="mt-4 max-w-lg text-sm leading-7 text-white/80 md:text-base">
-            소스, 장류, 장아찌, 반찬, 젓갈. 잡사바는 밥상에 바로 올리는 맛을 작은 병과 컵에 담습니다.
-          </p>
-          <div className="mt-6 flex gap-2">
-            <Link href="/category/jang" className="btn bg-gochujang text-white">
-              장류 보기
-            </Link>
-            <Link href="/events" className="btn bg-white/10 text-white">
-              기획전
-            </Link>
-          </div>
-        </div>
-        <div className="grid gap-3">
+      <section className="grid items-stretch gap-4 lg:grid-cols-[minmax(0,1.65fr)_minmax(16rem,0.72fr)]">
+        <HeroCarousel />
+        <div className="grid gap-3 lg:h-full lg:auto-rows-fr">
           {(banners.length > 0 ? banners : [{ id: "local", title: "새로 담근 것들", subtitle: "참깨 간장소스와 창난젓", link_url: "/new" }]).map(
             (banner, index) => (
-              <Link key={String(banner.id)} href={String(banner.link_url || "/")} className="panel block p-5" style={{ background: index === 1 ? "#f7e7df" : undefined }}>
+              <Link key={String(banner.id)} href={String(banner.link_url || "/")} className="panel block h-full p-5" style={{ background: index === 1 ? "#f7e7df" : undefined }}>
                 <p className="text-xs text-gochujang">0{index + 1}</p>
                 <p className="serif mt-2 text-2xl">{String(banner.title)}</p>
                 <p className="mt-1 text-sm text-muted">{String(banner.subtitle || "")}</p>
