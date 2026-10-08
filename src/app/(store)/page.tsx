@@ -2,7 +2,7 @@ import Link from "next/link";
 import { preload } from "react-dom";
 import { LogoIcon, Wordmark } from "@/components/brand";
 import { HeroCarousel } from "@/components/hero-carousel";
-import { ChevronRight, LeafIcon, ShieldIcon, SnowIcon, TruckIcon } from "@/components/icons";
+import { BowlIcon, ChevronRight, ClockIcon, LeafIcon, ShieldIcon, SnowIcon, TruckIcon } from "@/components/icons";
 import { ProductCard, ProductGrid, Section, SectionHeader, Stars } from "@/components/ui";
 import { catalogCategoryBySlug } from "@/lib/catalog-data";
 import { formatDate } from "@/lib/format";
@@ -25,6 +25,27 @@ const PROMISES = [
   { Icon: SnowIcon, title: "냉장은 아이스 포장", body: "금·토·일 출고 없이" },
   { Icon: LeafIcon, title: "원산지·함량 공개", body: "상품마다 고시 표기" },
 ];
+
+const STORY_POINTS = [
+  {
+    no: "01",
+    title: "원료는 국산 먼저",
+    body: "참깨·보리·고춧가루까지 원산지를 상품마다 그대로 적어요.",
+    Icon: LeafIcon,
+  },
+  {
+    no: "02",
+    title: "시간이 만드는 맛",
+    body: "고추장은 항아리에서, 액젓은 천천히. 서두르지 않고 숙성합니다.",
+    Icon: ClockIcon,
+  },
+  {
+    no: "03",
+    title: "작게, 자주, 신선하게",
+    body: "한 번에 많이 만들지 않고 주문에 맞춰 소량씩 담아 보내요.",
+    Icon: BowlIcon,
+  },
+] as const;
 
 export default async function HomePage() {
   const { supabase } = await getSession();
@@ -93,40 +114,42 @@ export default async function HomePage() {
         </ul>
       </section>
 
-      <section className="mt-16 overflow-hidden rounded-[1.75rem] bg-gochujang text-white md:mt-24 md:rounded-[2rem]">
-        <div className="grid items-center gap-8 px-6 py-10 md:grid-cols-[1.1fr_1fr] md:px-14 md:py-16">
-          <div>
-            <div className="flex items-center gap-3">
-              <span className="rounded-2xl bg-white/15 p-1.5">
-                <LogoIcon size={44} />
+      <section aria-labelledby="brand-story-title" className="brand-story mt-16 rounded-[1.75rem] md:mt-24 md:rounded-[2rem]">
+        <div className="grid items-center gap-9 px-5 py-9 sm:px-8 sm:py-12 lg:grid-cols-[minmax(0,1.08fr)_minmax(0,0.92fr)] lg:gap-16 lg:px-14 lg:py-16">
+          <div className="story-copy min-w-0">
+            <div className="flex items-center gap-3.5">
+              <span className="rounded-[1.15rem] bg-paper p-1.5 shadow-[0_12px_28px_rgb(80_12_8/0.28)] ring-1 ring-white/80">
+                <LogoIcon size={52} />
               </span>
-              <Wordmark height={26} className="text-white" />
+              <Wordmark height={24} className="text-white" />
             </div>
-            <p className="serif mt-7 text-[2rem] font-bold leading-[1.25] md:text-5xl">
-              잡사바는
-              <br />
-              “한번 잡숨봐”예요.
-            </p>
-            <p className="mt-5 max-w-md text-[15px] leading-7 text-white/85">
+            <p className="mt-8 text-[0.72rem] font-bold uppercase tracking-[0.24em] text-cream">Story</p>
+            <h2 id="brand-story-title" className="story-title serif mt-3 font-bold keep-all">
+              <span className="block">잡사바는</span>
+              <span className="mt-[0.06em] block whitespace-nowrap">“한번 잡숨봐”예요.</span>
+            </h2>
+            <p className="mt-5 max-w-md text-[15px] leading-7 text-white/90 keep-all">
               어른들이 밥상 앞에서 건네던 그 말, “이거 한번 잡숴 봐.” 잡사바는 그 마음으로 매일 꺼내 먹는 기름과 장, 젓갈을 만듭니다. 덜 달고, 덜 짜고, 원재료는 숨기지
               않고요.
             </p>
-            <Link href="/category/sauce" className="btn mt-7 bg-white text-gochujang hover:bg-cream">
+            <Link
+              href="/category/sauce"
+              className="btn mt-8 w-full bg-white text-gochujang shadow-[0_10px_24px_rgb(80_12_8/0.18)] hover:bg-cream sm:w-fit"
+            >
               대표 상품 보러 가기 <span aria-hidden="true">→</span>
             </Link>
           </div>
           <ul className="grid gap-3">
-            {[
-              ["01", "원료는 국산 먼저", "참깨·보리·고춧가루까지 원산지를 상품마다 그대로 적어요."],
-              ["02", "시간이 만드는 맛", "고추장은 항아리에서, 액젓은 천천히. 서두르지 않고 숙성합니다."],
-              ["03", "작게, 자주, 신선하게", "한 번에 많이 만들지 않고 주문에 맞춰 소량씩 담아 보내요."],
-            ].map(([no, title, body]) => (
-              <li key={no} className="flex gap-4 rounded-2xl bg-white/10 p-5 ring-1 ring-white/15">
-                <span className="serif text-2xl font-bold text-white/50">{no}</span>
-                <span>
-                  <span className="block text-base font-bold">{title}</span>
-                  <span className="mt-1 block text-sm leading-6 text-white/80">{body}</span>
+            {STORY_POINTS.map(({ no, title, body, Icon }) => (
+              <li key={no} className="rounded-2xl bg-paper px-5 py-4 text-ink shadow-[0_16px_36px_rgb(90_14_10/0.2)] ring-1 ring-white/70 sm:py-5">
+                <span className="flex items-start justify-between gap-3">
+                  <span className="serif text-[1.7rem] font-bold leading-none tracking-tight text-gochujang">{no}</span>
+                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gochujang-soft text-gochujang">
+                    <Icon size={18} />
+                  </span>
                 </span>
+                <span className="mt-3 block text-[15px] font-bold leading-snug keep-all sm:text-base">{title}</span>
+                <span className="mt-1.5 block text-sm leading-6 text-muted keep-all">{body}</span>
               </li>
             ))}
           </ul>
