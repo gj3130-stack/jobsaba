@@ -136,3 +136,50 @@ img {
 .prose-detail p {
   line-height: 1.9;
 }
+
+/* Korean should break on spaces and explicit breaks, not inside a word. */
+.keep-all {
+  word-break: keep-all;
+  line-break: strict;
+}
+
+.brand-story {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  color: white;
+  background:
+    radial-gradient(ellipse 85% 70% at 0% -8%, rgb(255 214 196 / 0.32), transparent 54%),
+    radial-gradient(ellipse 55% 65% at 100% 115%, rgb(92 12 8 / 0.5), transparent 58%),
+    linear-gradient(155deg, #e34839 0%, #d1271e 46%, #b01d16 100%);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.3),
+    0 24px 50px rgb(169 28 21 / 0.16);
+}
+
+.brand-story::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.4;
+  background-image: radial-gradient(rgb(255 255 255 / 0.7) 0.65px, transparent 0.65px);
+  background-size: 16px 16px;
+  mask-image: linear-gradient(125deg, rgb(0 0 0 / 0.85), transparent 70%);
+}
+
+.brand-story > * {
+  position: relative;
+  z-index: 1;
+}
+
+.story-copy {
+  container-type: inline-size;
+}
+
+.story-title {
+  font-size: clamp(1.7rem, 9.2cqi, 3.15rem);
+  line-height: 1.28;
+  letter-spacing: -0.03em;
+}
